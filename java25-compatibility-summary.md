@@ -51,8 +51,6 @@
 ## Scripts
 
 1. **java25-compile-only.bat**: Compiles the code with Java 25, skipping the license plugin.
-2. **build-with-java25-explicit.bat**: Attempts to build the full plugin with Java 25, but fails at the license plugin.
-3. **java25-profile.bat**: Uses the Java 25 compatibility profile to build with your current Java installation.
 
 ## Recommendations
 
