@@ -32,3 +32,4 @@ tags
 
 # Mac OSX
 .DS_Store
+*.class
