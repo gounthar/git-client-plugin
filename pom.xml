@@ -57,7 +57,7 @@
       <dependency>
         <groupId>io.jenkins.tools.bom</groupId>
         <artifactId>bom-${jenkins.baseline}.x</artifactId>
-        <version>4845.v9163d3278e4f</version>
+        <version>4862.vc32a_71c3e731</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -257,7 +257,7 @@
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>testcontainers</artifactId>
-      <version>1.21.0</version>
+      <version>1.21.1</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
