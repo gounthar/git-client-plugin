@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>5.11</version>
+    <version>5.17</version>
     <relativePath />
   </parent>
 
@@ -32,7 +32,7 @@
   </scm>
 
   <properties>
-    <revision>6.1.4</revision>
+    <revision>6.2.1</revision>
     <changelist>-SNAPSHOT</changelist>
     <!-- Character set tests fail unless file.encoding is set -->
     <argLine>-Dfile.encoding=${project.build.sourceEncoding}</argLine>
@@ -40,7 +40,7 @@
     <!-- https://www.jenkins.io/doc/developer/plugin-development/choosing-jenkins-baseline/ -->
     <jenkins.baseline>2.479</jenkins.baseline>
     <jenkins.version>${jenkins.baseline}.3</jenkins.version>
-    <jgit.version>7.0.0.202409031743-r</jgit.version>
+    <jgit.version>7.3.0.202506031305-r</jgit.version>
     <spotbugs.effort>Max</spotbugs.effort>
     <spotbugs.threshold>Low</spotbugs.threshold>
     <spotless.check.skip>false</spotless.check.skip>
@@ -48,6 +48,8 @@
     TODO Remove once in BOM - https://github.com/jenkinsci/bom/pull/4840/files
     -->
     <mina-sshd-api.version>2.15.0-161.vb_200831a_c15b_</mina-sshd-api.version>
+    <!-- Java 25 compatibility -->
+    <maven.compiler.release>17</maven.compiler.release>
   </properties>
 
   <dependencyManagement>
@@ -55,7 +57,7 @@
       <dependency>
         <groupId>io.jenkins.tools.bom</groupId>
         <artifactId>bom-${jenkins.baseline}.x</artifactId>
-        <version>4607.v67a_4791074d7</version>
+        <version>4948.vcf1d17350668</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -146,11 +148,6 @@
       <version>${jgit.version}</version>
       <exclusions>
         <exclusion>
-          <!-- Prevent inclusion of transitive dependency -->
-          <groupId>net.i2p.crypto</groupId>
-          <artifactId>eddsa</artifactId>
-        </exclusion>
-        <exclusion>
           <!-- Prevent inclusion of transitive dependency, OSGi not needed by git client plugin -->
           <groupId>org.apache.sshd</groupId>
           <artifactId>sshd-osgi</artifactId>
@@ -197,7 +194,7 @@
     <dependency>
       <groupId>io.github.sparsick.testcontainers.gitserver</groupId>
       <artifactId>testcontainers-gitserver</artifactId>
-      <version>0.11.0</version>
+      <version>0.12.0</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -219,7 +216,7 @@
     <dependency>
       <groupId>nl.jqno.equalsverifier</groupId>
       <artifactId>equalsverifier</artifactId>
-      <version>3.19.3</version>
+      <version>4.0.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -255,7 +252,7 @@
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>testcontainers</artifactId>
-      <version>1.20.6</version>
+      <version>1.21.2</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -294,7 +291,38 @@
           <force>true</force>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>17</source>
+          <target>17</target>
+          <release>17</release>
+          <fork>true</fork>
+        </configuration>
+      </plugin>
+
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>java25-compatibility</id>
+      <activation>
+        <property>
+          <name>java25.compatibility</name>
+        </property>
+      </activation>
+      <properties>
+        <!-- Skip plugins which have compatibility issues with Java 25 -->
+        <maven.license.skip>true</maven.license.skip>
+        <spotless.check.skip>true</spotless.check.skip>
+        <spotbugs.skip>true</spotbugs.skip>
+        <animal.sniffer.skip>true</animal.sniffer.skip>
+        <enforcer.skip>true</enforcer.skip>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+      </properties>
+    </profile>
+  </profiles>
 
 </project>
